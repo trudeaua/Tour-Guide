@@ -1,0 +1,17 @@
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>Tour Guide</ion-title>
+  </ion-navbar>
+  <ion-toolbar><ion-title>Select Your Address</ion-title></ion-toolbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <!--display all found addresses-->
+  <ion-list *ngIf="addresses">
+    <button class="address-results-list" style="font-size: 18px" ion-item text-wrap color="primary" block *ngFor="let address of addresses"
+      (click)="goToCategoriesPage(address)">{{address.formatted_address}}</button>
+  </ion-list>
+</ion-content>

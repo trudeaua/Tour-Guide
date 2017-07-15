@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Tour Guide</ion-title>
+    <ion-buttons end><button ion-button (click)="startOver()">
+        <ion-icon padding-right name="refresh"></ion-icon>Start Over
+      </button></ion-buttons>
+  </ion-navbar>
+  <ion-toolbar color="light">
+    <ion-segment color="primary" [(ngModel)]="activeTab">
+      <ion-segment-button value="walk" (click)="changeTravelMode('WALKING')">
+        <ion-icon name="walk"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="bike" (click)="changeTravelMode('BICYCLING')">
+        <ion-icon name="bicycle"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="car" (click)="changeTravelMode('DRIVING')">
+        <ion-icon name="car"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!--this is the google maps map-->
+  <div id="map"></div>
+</ion-content>
+<!--display total time and dist in page footer-->
+<ion-footer class="directions-ion-card">
+  <ion-toolbar>
+    <ion-item text-wrap no-lines>
+      <span style="font-size: 15px">
+        Generated Tour:
+        </span>
+      <br>
+      <span style="font-size: 16px;">
+          <span style="color: coral;" id="totalTime"></span>&nbsp;<span style="color: cadetblue;"><span id="totalDist"></span></span>
+      </span>
+    </ion-item>
+  </ion-toolbar>
+</ion-footer>

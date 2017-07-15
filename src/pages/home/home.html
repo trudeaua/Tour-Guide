@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      Tour Guide
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <!--form for user to enter an address-->
+  <form #inputAddressForm="ngForm" (ngSubmit)="processData(inputAddressForm)">
+    <ion-input id="address-input-bar" type="text" name="inputAddress" placeholder="Enter an address" ngModel></ion-input>
+    <button ion-button large block>
+      <b>Submit</b>
+    </button>
+    <span *ngIf="displayErrMsg">* You Must Enter A Value</span>
+  </form>
+</ion-content>

@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Tour Guide</ion-title>
+  </ion-navbar>
+  <ion-toolbar>
+    <ion-title>Select Your Categories</ion-title>
+    <ion-buttons end><button color="primary" small ion-button [disabled]="!enableBtn" (click)="goToMap()" icon-right>{{!enableBtn ? "Loading..." : "Generate"}}<ion-icon *ngIf="enableBtn" name="arrow-forward"></ion-icon></button></ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <!--display all categories in a nice layout-->
+  <ion-grid>
+    <ion-row *ngFor="let i of rows">
+      <ion-col *ngFor="let c of categories | slice:(i*3):(i+1)*3" width-33><button class="row responsive-md" ion-button block (click)="addToTrip(c)">{{c}}</button></ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
