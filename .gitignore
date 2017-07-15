@@ -31,7 +31,6 @@ www/
 $RECYCLE.BIN/
 *.apk
 *.keystore
-*.xml
 
 
 .DS_Store
