@@ -101,6 +101,7 @@ export class MapPage {
         this.legs.push(
           {
             Instructions: this.routeInfo.Segments[i].Instructions,
+            Label: this.routeInfo.Segments[i].Label,
             Name: this.routeInfo.Segments[i].Waypoint.name,
             Start: this.routeInfo.Segments[i].Start,
             Travel: this.routeInfo.Segments[i].Travel
@@ -151,14 +152,19 @@ export class MapPage {
         var directions = {
           Segments: []
         };
-        let trip = self.waypointLocs.concat(self.hbLoc);
-        let tripOrder = [self.hbLoc].concat(self.waypointLocs);
         self.waypointLocs = self.waypointLocs;
         var route = response.routes[0];
+        let waypointOrder = [];
+        for (let i = 0; i < route.waypoint_order.length; i++) {
+          waypointOrder.push(self.waypointLocs[route.waypoint_order[i]]);
+        }
+        let trip = waypointOrder.concat(self.hbLoc);
+        let tripOrder = [self.hbLoc].concat(waypointOrder);
         //add all legs of the route to segments
         for (var i = 0; i < route.legs.length; i++) {
           directions.Segments.push({
             Start: tripOrder[i],
+            Label: String.fromCharCode(65 + i),
             End: route.legs[i].end_address,
             Travel: route.legs[i].distance.text,
             Duration: route.legs[i].duration.text,

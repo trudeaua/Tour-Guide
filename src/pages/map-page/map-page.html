@@ -60,7 +60,8 @@
       <ion-item *ngFor="let leg of legs" text-wrap>
         <ion-grid>
           <ion-row>
-            <ion-col col-9 class="start-segment">{{leg.Start.name}}</ion-col>
+            <ion-col col-1 class="label-segment">{{leg.Label}}</ion-col>
+            <ion-col col-8 class="start-segment">{{leg.Start.name}}</ion-col>
             <ion-col col-3 class="travel-segment">{{leg.Travel}}</ion-col>
           </ion-row>
         </ion-grid>
