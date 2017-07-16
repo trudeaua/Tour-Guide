@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, LoadingController, Loading, Events } from 'ionic-angular';
-
+import { IonPullUpFooterState } from "ionic-pullup";
 import { DataSharingService } from '../../shared/data-sharing.service';
 import { CategoryApi } from '../../shared/category-api.service';
 import { HomePage } from "../../shared/pages";
@@ -13,17 +13,19 @@ declare var google: any;
   templateUrl: 'map-page.html',
 })
 export class MapPage {
-  infoWindows: any[];
-  markers: any[];
-  directionsDisplay: any;
   activeTab: string;
-  map: any;
-  travelMode: string;
-  routeInfo: any;
   convertedWaypts: any[];
+  directionsDisplay: any;
+  footerState: IonPullUpFooterState;
   hbLoc: any;
-  waypointLocs: any[];
+  infoWindows: any[];
+  legs: any[];
   loading: Loading;
+  map: any;
+  markers: any[];
+  routeInfo: any;
+  travelMode: string;
+  waypointLocs: any[];
 
   constructor(
     private alertCtrl: AlertController,
@@ -34,6 +36,7 @@ export class MapPage {
     public navCtrl: NavController,
     public navParams: NavParams) {
 
+    this.footerState = IonPullUpFooterState.Collapsed;
     this.waypointLocs = this.navParams.data.waypointLocs;
     this.convertedWaypts = [];
     for (let i = 0; i < this.waypointLocs.length; i++) {
@@ -44,6 +47,24 @@ export class MapPage {
     }
 
     this.hbLoc = this.navParams.data.hbLoc;
+  }
+  /**
+   * fires when the footer expands
+   */
+  footerExpanded() {
+    console.log('expanded');
+  }
+  /**
+   * fires when the footer collapses
+   */
+  footerCollapsed() {
+    console.log('collapsed');
+  }
+  /**
+   * toggle the footer state
+   */
+  toggleFooter() {
+    this.footerState = this.footerState == IonPullUpFooterState.Collapsed ? IonPullUpFooterState.Expanded : IonPullUpFooterState.Collapsed;
   }
   /**
    * not to be confused with ionViewDidLoad(), although its similar
@@ -75,6 +96,17 @@ export class MapPage {
     this.activeTab = 'car';
     this.events.subscribe('routeInfo:changed', () => {
       this.routeInfo = this.dataSharing.getRouteInfo();
+      this.legs = [];
+      for (let i = 0; i < this.routeInfo.Segments.length; i++) {
+        this.legs.push(
+          {
+            Instructions: this.routeInfo.Segments[i].Instructions,
+            Name: this.routeInfo.Segments[i].Waypoint.name,
+            Start: this.routeInfo.Segments[i].Start,
+            Travel: this.routeInfo.Segments[i].Travel
+          }
+        );
+      }
     });
     this.initMap();
   }
@@ -119,16 +151,19 @@ export class MapPage {
         var directions = {
           Segments: []
         };
-
+        let trip = self.waypointLocs.concat(self.hbLoc);
+        let tripOrder = [self.hbLoc].concat(self.waypointLocs);
+        self.waypointLocs = self.waypointLocs;
         var route = response.routes[0];
-        
         //add all legs of the route to segments
         for (var i = 0; i < route.legs.length; i++) {
           directions.Segments.push({
-            Start: route.legs[i].start_address,
+            Start: tripOrder[i],
             End: route.legs[i].end_address,
             Travel: route.legs[i].distance.text,
-            Duration: route.legs[i].duration.text
+            Duration: route.legs[i].duration.text,
+            Instructions: [],
+            Waypoint: trip[i]
           });
           //add marker for all points on route
           self.markers.push(new google.maps.Marker({
@@ -136,6 +171,16 @@ export class MapPage {
             map: self.map,
             label: String.fromCharCode(65 + i)
           }));
+          for (var j = 0; j < route.legs[i].steps.length; j++) {
+            if (j + 1 >= route.legs[i].steps.length) {
+              directions.Segments[i].Instructions.push(
+                route.legs[i].steps[j].instructions.replace('Destination', '<br><b>' + trip[i].name + '</b>')
+              );
+            }
+            else {
+              directions.Segments[i].Instructions.push(route.legs[i].steps[j].instructions);
+            }
+          }
         }
         //add info window for hbLoc
         self.infoWindows.push(new google.maps.InfoWindow({
@@ -184,8 +229,8 @@ export class MapPage {
         }
         hours += hoursTemp;
         document.getElementById('totalTime').innerHTML = hours > 0 ? hours + " hr " + minutes + " min" : minutes + " min";
-        document.getElementById('totalDist').innerHTML = kms > 0 ? "(" + (kms + m/1000).toFixed(1) + " km)" : "( " + m.toFixed(0) + " m)";
-        
+        document.getElementById('totalDist').innerHTML = kms > 0 ? "(" + (kms + m / 1000).toFixed(1) + " km)" : "( " + m.toFixed(0) + " m)";
+
         self.dataSharing.setRouteInfo(directions);
         self.events.publish('routeInfo:changed');
 
@@ -194,7 +239,6 @@ export class MapPage {
         self.viewDidLoad();
       } else {
         //error msg
-        console.log(response, status);
         let alert = self.alertCtrl.create({
           title: 'No results for this location.',
           subTitle: 'Please try entering a different location.',

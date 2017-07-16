@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { HttpModule } from "@angular/http";
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { IonPullupModule } from 'ionic-pullup';
 import { IonicStorageModule } from "@ionic/storage";
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -22,7 +23,8 @@ import { HomePage, AddressSelectionPage, CategorySelectionPage, MapPage } from '
     IonicStorageModule.forRoot({
       name: '_tourguidedb',
       driverOrder: ['indexeddb', 'sqlite']
-    })
+    }),
+    IonPullupModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

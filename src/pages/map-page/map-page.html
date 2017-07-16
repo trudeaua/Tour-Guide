@@ -24,17 +24,48 @@
   <!--this is the google maps map-->
   <div id="map"></div>
 </ion-content>
-<!--display total time and dist in page footer-->
-<ion-footer class="directions-ion-card">
-  <ion-toolbar>
-    <ion-item text-wrap no-lines>
-      <span style="font-size: 15px">
+<ion-footer class="directions-ion-card" style="visibility: hidden">
+  <ion-toolbar padding>
+    <span style="font-size: 15px">
         Generated Tour:
         </span>
-      <br>
-      <span style="font-size: 16px;">
-          <span style="color: coral;" id="totalTime"></span>&nbsp;<span style="color: cadetblue;"><span id="totalDist"></span></span>
-      </span>
-    </ion-item>
+    <br>
+    <span style="font-size: 16px;">
+          <span style="color: coral;">VALUE</span>&nbsp;<span style="color: cadetblue;"><span>VALUE</span></span>
+    </span>
   </ion-toolbar>
 </ion-footer>
+<!--display total time and dist in page footer-->
+
+<ion-pullup (onExpand)="footerExpanded()" class="directions-ion-card" (onCollapse)="footerCollapsed()" [(state)]="footerState">
+  <ion-toolbar padding>
+    <span style="font-size: 15px; color: gray">
+      Generated Tour:
+    </span>
+    <br>
+    <span style="font-size: 16px; padding-left: 10px;">
+      <span style="color: coral;" id="totalTime"></span>&nbsp;<span style="color: cadetblue;"><span id="totalDist"></span></span>
+    </span>
+    <ion-buttons right>
+      <button ion-button *ngIf="footerState == 0" (tap)="toggleFooter()">
+        <ion-icon name="arrow-dropup"></ion-icon>
+      </button>
+      <button ion-button *ngIf="footerState == 1" (tap)="toggleFooter()">
+        <ion-icon name="arrow-dropdown"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-content>
+    <ion-list *ngIf="routeInfo">
+      <ion-item *ngFor="let leg of legs" text-wrap>
+        <ion-grid>
+          <ion-row>
+            <ion-col col-9 class="start-segment">{{leg.Start.name}}</ion-col>
+            <ion-col col-3 class="travel-segment">{{leg.Travel}}</ion-col>
+          </ion-row>
+        </ion-grid>
+        <p *ngFor="let instruction of leg.Instructions" class="route-instruction">-&nbsp;<span [innerHtml]="instruction"></span><br></p>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-pullup>
