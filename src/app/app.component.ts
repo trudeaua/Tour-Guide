@@ -27,6 +27,7 @@ export class MyApp {
           if (keys.length - 1 == data.length) {
             for (let i = 0; i < data.length; i++) {
               if (keys.indexOf(data[i].id) < 0) {
+                this.storage.clear();
                 this.getCategories();
                 this.getAllCategoryData();
                 break;
@@ -38,6 +39,7 @@ export class MyApp {
             this.dataSharing.setStorageIsSet(true);
           }
           else {
+            this.storage.clear();
             this.getCategories();
             this.getAllCategoryData();
           }
