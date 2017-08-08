@@ -38,7 +38,7 @@
 <!--display total time and dist in page footer-->
 
 <ion-pullup (onExpand)="footerExpanded()" class="directions-ion-card" (onCollapse)="footerCollapsed()" [(state)]="footerState">
-  <ion-toolbar padding>
+  <ion-toolbar padding (tap)="toggleFooter()">
     <span style="font-size: 15px; color: gray">
       Generated Tour:
     </span>
@@ -61,7 +61,7 @@
         <ion-grid>
           <ion-row>
             <ion-col col-1 class="label-segment">{{leg.Label}}</ion-col>
-            <ion-col col-8 class="start-segment">{{leg.Start.name}}</ion-col>
+            <ion-col col-8 class="start-segment" (click)="viewOnMap(leg)">{{leg.Start.name}}&nbsp;<ion-icon name="arrow-forward"></ion-icon></ion-col>
             <ion-col col-3 class="travel-segment">{{leg.Travel}}</ion-col>
           </ion-row>
         </ion-grid>

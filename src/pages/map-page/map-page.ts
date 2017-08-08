@@ -88,6 +88,11 @@ export class MapPage {
       loader.dismiss();
     });
   }
+  viewOnMap(leg: any) {
+    this.toggleFooter();
+    this.map.panTo({lat: leg.Start.latitude, lng: leg.Start.longitude});
+    this.map.setZoom(17);
+  }
   /**
    * initialize map, directions, and segments
    */
@@ -108,6 +113,7 @@ export class MapPage {
           }
         );
       }
+      console.log(this.legs);
     });
     this.initMap();
   }
